@@ -29,7 +29,10 @@ class Ticket(models.Model):
     )
     date_added = models.DateTimeField(auto_now_add=True)
     attachments = models.FileField(
-        upload_to='attachments/', 
+        upload_to='attachments/%Y/%m/%d', 
         blank=True, 
         null=True
     )
+
+    def __str__(self) -> str:
+        return self.title
