@@ -8,4 +8,6 @@ app_name = 'bugs'
 urlpatterns = [
     # Home page
     path('', views.index, name='index'),
+    # Projects page
+    path('projects/', views.projects, name='projects'),
 ]
