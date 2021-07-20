@@ -10,4 +10,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     # Projects page
     path('projects/', views.projects, name='projects'),
+    # Project page
+    path('projects/<int:project_id>', views.project, name='project'),
 ]
