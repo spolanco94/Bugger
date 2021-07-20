@@ -36,3 +36,9 @@ class Ticket(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+class Comment(models.Model):
+    """A comment made by a user directly on a ticket."""
+    ticket = ForeignKey(Ticket, on_delete=models.CASCADE)
+    comment = models.TextField()
+    date_added = models.DateTimeField(auto_now_add=True)
