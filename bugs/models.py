@@ -42,3 +42,9 @@ class Comment(models.Model):
     ticket = ForeignKey(Ticket, on_delete=models.CASCADE)
     comment = models.TextField()
     date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        if len(self.comment) > 50:
+            return f"{self.comment[:50]}..."
+        
+        return self.comment
