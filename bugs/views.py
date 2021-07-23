@@ -15,6 +15,13 @@ def projects(request):
 def project(request, project_id):
     """Page displaying details and tickets of a project."""
     project = Project.objects.get(id=project_id)
-    tickets = Ticket.objects.order_by('date_added')
+    tickets = project.ticket_set.order_by('date_added')
     context = {'project': project, 'tickets': tickets}
     return render(request, 'bugs/project.html', context)
+
+def ticket(request, project_id, ticket_id):
+    """Page displaying details of a ticket."""
+    project = Project.objects.get(id=project_id)
+    ticket = Ticket.objects.get(id=ticket_id)
+    context = {'ticket': ticket, 'project': project}
+    return render(request, 'bugs/ticket.html', context)
