@@ -1,7 +1,7 @@
 {% extends 'bugs/base.html' %}
 
 {% block content %}
-  <h4>Project: {{ project.title }}</h4>
+  <h2>Project: {{ project.title }}</h2>
   <p>{{ project.date_added|date:'M d, Y' }}</p>
   <p>Description: </p>
   <p>{{ project.details|linebreaks }}</p>
@@ -10,7 +10,11 @@
   <ul>
     {% for ticket in tickets %}
       <li>
-        <p>{{ ticket }}</p>
+        <p>
+          <a href="{% url 'bugs:ticket' project.id ticket.id%}">
+            {{ ticket.title }}
+          </a>
+        </p>
       </li>
     {% empty %}
       <li>There are no tickets for this project.</li>

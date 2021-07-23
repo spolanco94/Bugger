@@ -1,0 +1,11 @@
+{% extends 'bugs/base.html' %}
+
+{% block content %}
+  <h2>Ticket: {{ ticket.title }}</h2>
+  <h3>Project: {{ project.title }}</h3>
+  <p>{{ ticket.date_added|date:'M d, Y h:i' }}</p>
+  <p>Details:</p>
+  <p>{{ ticket.details|linebreaks }}</p>
+
+
+{% endblock content %}

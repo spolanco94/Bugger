@@ -12,4 +12,10 @@ urlpatterns = [
     path('projects/', views.projects, name='projects'),
     # Project page
     path('projects/<int:project_id>', views.project, name='project'),
+    # Ticket page
+    path(
+        'projects/<int:project_id>/tickets/<int:ticket_id>', 
+        views.ticket, 
+        name='ticket'
+        ),
 ]
