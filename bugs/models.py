@@ -19,7 +19,7 @@ class Ticket(models.Model):
         ('L', 'Low'),
     ]
     
-    project = ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
     details = models.TextField()
     priority_level = models.CharField(
@@ -34,12 +34,15 @@ class Ticket(models.Model):
         null=True
     )
 
+    class Meta:
+        verbose_name_plural = 'tickets'
+
     def __str__(self) -> str:
         return self.title
 
 class Comment(models.Model):
     """A comment made by a user directly on a ticket."""
-    ticket = ForeignKey(Ticket, on_delete=models.CASCADE)
+    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
     comment = models.TextField()
     date_added = models.DateTimeField(auto_now_add=True)
 
