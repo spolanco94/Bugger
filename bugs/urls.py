@@ -18,4 +18,6 @@ urlpatterns = [
         views.ticket, 
         name='ticket'
         ),
+    # New project page
+    path('new_project/', views.new_project, name='new_project'),
 ]

@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from .models import Project, Ticket
+from .forms import ProjectForm
 
 def index(request):
     """The home page for Bugger"""
@@ -25,3 +26,18 @@ def ticket(request, project_id, ticket_id):
     ticket = Ticket.objects.get(id=ticket_id)
     context = {'ticket': ticket, 'project': project}
     return render(request, 'bugs/ticket.html', context)
+
+def new_project(request):
+    """Create a new project."""
+    if request.method != "POST":
+        # No data submitted, create a blank form
+        form = ProjectForm
+    else:
+        form = ProjectForm(data=request.POST)
+        if form.is_valid:
+            form.save()
+            return redirect('bugs:projects')
+
+    # Display a blank or invalid form
+    context = {'form': form}
+    return render(request, 'bugs/new_project.html', context)
