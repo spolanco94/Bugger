@@ -20,5 +20,6 @@
       <li>There are no tickets for this project.</li>
     {% endfor %}
   </ul>
+  <p><a href="{% url 'bugs:edit_project' project.id %}">Edit project</a></p>
 
 {% endblock content %}

@@ -41,3 +41,21 @@ def new_project(request):
     # Display a blank or invalid form
     context = {'form': form}
     return render(request, 'bugs/new_project.html', context)
+
+def edit_project(request, project_id):
+    """Edit a current project."""
+    project = Project.objects.get(id=project_id)
+
+    if request.method != 'POST':
+        # Generate form prefilled with current data
+        form = ProjectForm(instance=project)
+    else:
+        # Update existing entry with new information
+        form = ProjectForm(instance=project, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('bugs:project', project_id=project.id)
+
+    # Display invalid form
+    context = {'project': project, 'form': form}
+    return render(request, 'bugs/edit_project.html', context)

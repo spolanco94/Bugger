@@ -20,4 +20,10 @@ urlpatterns = [
         ),
     # New project page
     path('new_project/', views.new_project, name='new_project'),
+    # Edit project page
+    path(
+        'edit_project/<int:project_id>', 
+        views.edit_project, 
+        name='edit_project'
+        ),
 ]
