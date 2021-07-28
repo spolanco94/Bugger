@@ -1,8 +1,8 @@
 from typing import ContextManager
 from django.shortcuts import redirect, render
 
-from .models import Project, Ticket
-from .forms import ProjectForm, TicketForm
+from .models import Comment, Project, Ticket
+from .forms import CommentForm, ProjectForm, TicketForm
 
 def index(request):
     """The home page for Bugger"""
@@ -25,7 +25,31 @@ def ticket(request, project_id, ticket_id):
     """Page displaying details of a ticket."""
     project = Project.objects.get(id=project_id)
     ticket = Ticket.objects.get(id=ticket_id)
-    context = {'ticket': ticket, 'project': project}
+    comments = ticket.comment_set.order_by('date_added')
+    
+    # Comment system for tickets
+    new_comment = None
+    if request.method != 'POST':
+        form = CommentForm()
+    else:
+        form = CommentForm(data=request.POST)
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.ticket = ticket
+            new_comment.save()
+            return redirect(
+                'bugs:ticket', 
+                project_id = project.id, 
+                ticket_id=ticket.id
+                )
+
+    context = {
+        'ticket': ticket, 
+        'project': project, 
+        'comments': comments,
+        'new_comment': new_comment,
+        'form': form        
+        }
     return render(request, 'bugs/ticket.html', context)
 
 def new_project(request):

@@ -1,7 +1,8 @@
 from django import forms
+from django.db import models
 from django.forms import widgets
 
-from .models import Project, Ticket
+from .models import Comment, Project, Ticket
 
 class ProjectForm(forms.ModelForm):
     class Meta:
@@ -22,4 +23,12 @@ class TicketForm(forms.ModelForm):
         widgets = {
             'details': forms.Textarea(attrs={'cols': 80}),
             'attachments': widgets.ClearableFileInput(attrs={'multiple': True})
+        }
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['comment']
+        widgets = {
+            'comment': forms.Textarea(attrs={'cols': 60}),
         }

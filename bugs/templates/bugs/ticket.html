@@ -11,4 +11,23 @@
     <a href="{% url 'bugs:edit_ticket' project.id ticket.id %}">Edit ticket</a>
   </p>
 
+  <ul>
+    {% for comment in comments %}
+      <li>{{ comment.comment|linebreaks }}</li>
+    {% empty %}
+      <li>There are no comments for this ticket.</li>
+    {% endfor %}
+  </ul>
+  
+  {% if new_comment  %}
+    <h5>Your comment has been added!</h5>
+  {% else %}
+    <h4>Add a new comment</h4>
+    <form action="{% url 'bugs:ticket' project.id ticket.id %}" method='post'>
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button name='submit'>Add comment</button>
+    </form>
+  {% endif %}
+
 {% endblock content %}
