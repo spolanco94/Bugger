@@ -1,7 +1,8 @@
+from typing import ContextManager
 from django.shortcuts import redirect, render
 
 from .models import Project, Ticket
-from .forms import ProjectForm
+from .forms import ProjectForm, TicketForm
 
 def index(request):
     """The home page for Bugger"""
@@ -31,7 +32,7 @@ def new_project(request):
     """Create a new project."""
     if request.method != "POST":
         # No data submitted, create a blank form
-        form = ProjectForm
+        form = ProjectForm()
     else:
         form = ProjectForm(data=request.POST)
         if form.is_valid:
@@ -59,3 +60,24 @@ def edit_project(request, project_id):
     # Display invalid form
     context = {'project': project, 'form': form}
     return render(request, 'bugs/edit_project.html', context)
+
+def new_ticket(request, project_id):
+    """Create a new ticket for a project."""
+    project = Project.objects.get(id=project_id)
+
+    if request.method != 'POST':
+        form = TicketForm()
+    else:
+        form = TicketForm(request.POST, request.FILES)
+        files = request.FILES.getlist('attachments')
+        if form.is_valid():
+            for f in files:
+                file_instance = Ticket(attachments=f)
+                file_instance.save()
+            new_ticket = form.save(commit=False)
+            new_ticket.project = project
+            new_ticket.save()
+            return redirect('bugs:project', project_id=project.id)
+
+    context = {'project': project, 'form': form}
+    return render(request, 'bugs/new_ticket.html', context)

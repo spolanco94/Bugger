@@ -19,6 +19,7 @@
     {% empty %}
       <li>There are no tickets for this project.</li>
     {% endfor %}
+    <p><a href="{% url 'bugs:new_ticket' project.id %}">Add a ticket</a></p>
   </ul>
   <p><a href="{% url 'bugs:edit_project' project.id %}">Edit project</a></p>
 

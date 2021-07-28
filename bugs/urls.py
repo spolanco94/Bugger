@@ -26,4 +26,6 @@ urlpatterns = [
         views.edit_project, 
         name='edit_project'
         ),
+    # New ticket page
+    path('new_ticket/<int:project_id>', views.new_ticket, name='new_ticket'),
 ]
