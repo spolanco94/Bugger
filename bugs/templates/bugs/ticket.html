@@ -7,5 +7,8 @@
   <p>Details:</p>
   <p>{{ ticket.details|linebreaks }}</p>
 
+  <p>
+    <a href="{% url 'bugs:edit_ticket' project.id ticket.id %}">Edit ticket</a>
+  </p>
 
 {% endblock content %}

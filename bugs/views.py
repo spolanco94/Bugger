@@ -72,6 +72,7 @@ def new_ticket(request, project_id):
         files = request.FILES.getlist('attachments')
         if form.is_valid():
             for f in files:
+                print(f)
                 file_instance = Ticket(attachments=f)
                 file_instance.save()
             new_ticket = form.save(commit=False)
@@ -81,3 +82,20 @@ def new_ticket(request, project_id):
 
     context = {'project': project, 'form': form}
     return render(request, 'bugs/new_ticket.html', context)
+
+def edit_ticket(request, project_id, ticket_id):
+    """Edit an exisiting ticket."""
+    project = Project.objects.get(id=project_id)
+    ticket = Ticket.objects.get(id=ticket_id)
+
+    if request.method != 'POST':
+        # Prefill form with data from database
+        form = TicketForm(instance=ticket)
+    else:
+        form = TicketForm(instance=ticket, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('bugs:project', project_id=project.id)
+    
+    context = {'project': project, 'ticket': ticket, 'form': form}
+    return render(request, 'bugs/edit_ticket.html', context)

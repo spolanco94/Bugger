@@ -27,5 +27,15 @@ urlpatterns = [
         name='edit_project'
         ),
     # New ticket page
-    path('new_ticket/<int:project_id>', views.new_ticket, name='new_ticket'),
+    path(
+        'projects/<int:project_id>/new_ticket/', 
+        views.new_ticket, 
+        name='new_ticket'
+        ),
+    # Edit ticket page
+    path(
+        'projects/<int:project_id>/tickets/<int:ticket_id>/edit_ticket/', 
+        views.edit_ticket, 
+        name='edit_ticket'
+        ),
 ]
