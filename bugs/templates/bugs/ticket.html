@@ -13,7 +13,11 @@
 
   <ul>
     {% for comment in comments %}
-      <li>{{ comment.comment|linebreaks }}</li>
+      <li>
+        <p>{{ comment.comment|linebreaks }}</p>
+        <p>{{comment.date_added|date:"M d, 'y h:i a"}}</p>
+        <a href="{% url 'bugs:edit_comment' project.id ticket.id comment.id %}">Edit</a>
+      </li>
     {% empty %}
       <li>There are no comments for this ticket.</li>
     {% endfor %}
