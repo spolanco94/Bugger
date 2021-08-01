@@ -1,0 +1,11 @@
+{% extends 'bugs/base.html' %}
+
+{% block content %}
+  <h3>Editing Comment</h3>
+  <form action="{% url 'bugs:edit_comment' project.id ticket.id comment.id %}" method='post'>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button name='submit'>Save</button>
+  </form>
+
+{% endblock content %}

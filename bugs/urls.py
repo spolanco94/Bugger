@@ -38,4 +38,10 @@ urlpatterns = [
         views.edit_ticket, 
         name='edit_ticket'
         ),
+    # Edit comment page
+    path(
+        'projects/<int:prj_id>/tickets/<int:tkt_id>/<int:cmt_id>/edit_comment/', 
+        views.edit_comment, 
+        name='edit_comment'
+        ),
 ]

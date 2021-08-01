@@ -39,7 +39,7 @@ def ticket(request, project_id, ticket_id):
             new_comment.save()
             return redirect(
                 'bugs:ticket', 
-                project_id = project.id, 
+                project_id=project.id, 
                 ticket_id=ticket.id
                 )
 
@@ -123,3 +123,29 @@ def edit_ticket(request, project_id, ticket_id):
     
     context = {'project': project, 'ticket': ticket, 'form': form}
     return render(request, 'bugs/edit_ticket.html', context)
+
+def edit_comment(request, prj_id, tkt_id, cmt_id):
+    """Edit existing comment."""
+    project = Project.objects.get(id=prj_id)
+    ticket = Ticket.objects.get(id=tkt_id)
+    comment = Comment.objects.get(id=cmt_id)
+
+    if request.method != 'POST':
+        form = CommentForm(instance=comment)
+    else:
+        form = CommentForm(instance=comment, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(
+                            'bugs:ticket', 
+                            ticket_id=ticket.id, 
+                            project_id=project.id
+                            )
+        
+    context = {
+               'project': project, 
+               'ticket': ticket, 
+               'comment': comment, 
+               'form': form
+              }
+    return render(request, 'bugs/edit_comment.html', context)
