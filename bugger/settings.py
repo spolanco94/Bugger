@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # My Apps
     'bugs',
+    'users',
 
     # Django Apps
     'django.contrib.admin',

@@ -1,0 +1,15 @@
+{% extends 'bugs/base.html' %}
+
+{% block content %}
+    {% if form.errors %}
+      <h3>We're sorry, the username/password combination you entered does not match.</h3>
+    {% endif %}
+    <form action="{% url 'users:login' %}" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <button name="submit">Submit</button>
+      <input type="hidden" name="next" value="bugs:index">
+
+    </form>
+{% endblock content %}
