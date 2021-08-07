@@ -1,0 +1,11 @@
+{% extends 'bugs/base.html' %}
+
+{% block content %}
+  <form action="{% url 'users:register' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button name="submit">Submit</button>
+    <input type="hidden" name="next" value="{% url 'bugs:index'%}">
+  </form>
+{% endblock content %}
