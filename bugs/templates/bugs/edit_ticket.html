@@ -4,7 +4,7 @@
   <h3>Project: {{ project.title }}</h3>
   <h3>Editing ticket: {{ ticket.title }}</h3>
   
-  <form action="{% url 'bugs:edit_ticket' project.id ticket.id %}" method='post'>
+  <form action="{% url 'bugs:edit_ticket' project.id ticket.id %}" method='post' enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <button name="submit">Submit changes</button>

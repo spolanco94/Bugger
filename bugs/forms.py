@@ -19,10 +19,10 @@ class ProjectForm(forms.ModelForm):
 class TicketForm(forms.ModelForm):
     class Meta:
         model = Ticket
-        fields = ['title', 'details', 'priority_level', 'attachments']
+        fields = ['title', 'details', 'priority_level', 'attachment']
         widgets = {
             'details': forms.Textarea(attrs={'cols': 80}),
-            'attachments': widgets.ClearableFileInput(attrs={'multiple': True})
+            'attachment': widgets.ClearableFileInput(attrs={'multiple': True})
         }
 
 class CommentForm(forms.ModelForm):

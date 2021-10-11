@@ -28,7 +28,7 @@ class Ticket(models.Model):
         default='M',
     )
     date_added = models.DateTimeField(auto_now_add=True)
-    attachments = models.FileField(
+    attachment = models.FileField(
         upload_to='attachments/%Y/%m/%d', 
         blank=True, 
         null=True
@@ -39,6 +39,16 @@ class Ticket(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+    @property
+    def attachment_url(self):
+        if self.attachment and hasattr(self.attachment, 'url'):
+            return self.attachment.url
+    
+    @property
+    def attachment_filename(self):
+        if self.attachment and hasattr(self.attachment, 'filename'):
+            return self.attachment.filename
 
 class Comment(models.Model):
     """A comment made by a user directly on a ticket."""

@@ -6,6 +6,16 @@
   <p>{{ ticket.date_added|date:'M d, Y h:i' }}</p>
   <p>Details:</p>
   <p>{{ ticket.details|linebreaks }}</p>
+  
+  <h3>Attachment</h3>
+  {% if tickets.attachment %}
+    <p>
+      <a href="{{ ticket.attachment.attachment_url }}">{{ ticket.attachment.attachment_filename }}</a>
+    </p>
+  {% else %}
+    <p>There is no attachment for this ticket.</p>
+  {% endif %}
+  
 
   <p>
     <a href="{% url 'bugs:edit_ticket' project.id ticket.id %}">Edit ticket</a>
