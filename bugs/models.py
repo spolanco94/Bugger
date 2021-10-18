@@ -1,12 +1,15 @@
+from django.contrib.auth import login
 from django.db import models
 from django.db.models.fields import CharField, TextField
 from django.db.models.fields.related import ForeignKey
+from django.contrib.auth.models import User
 
 class Project(models.Model):
     """A project currently being tracked."""
     title = models.CharField(max_length=150)
     details = models.TextField()
     date_added = models.DateTimeField(auto_now_add=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return self.title
@@ -22,6 +25,7 @@ class Ticket(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
     details = models.TextField()
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     priority_level = models.CharField(
         max_length=1, 
         choices=PRIORITY_LEVEL_CHOICES,
@@ -45,6 +49,7 @@ class Comment(models.Model):
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
     comment = models.TextField()
     date_added = models.DateTimeField(auto_now_add=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         if len(self.comment) > 50:

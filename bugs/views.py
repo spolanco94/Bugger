@@ -1,5 +1,6 @@
 from typing import ContextManager
 from django.shortcuts import redirect, render
+from django.contrib.auth.decorators import login_required
 
 from .models import Comment, Project, Ticket
 from .forms import CommentForm, ProjectForm, TicketForm
@@ -8,12 +9,14 @@ def index(request):
     """The home page for Bugger"""
     return render(request, 'bugs/index.html')
 
+@login_required
 def projects(request):
     """Page displaying all projects by date added."""
     projects = Project.objects.order_by('date_added')
     context = {'projects': projects}
     return render(request, 'bugs/projects.html', context)
 
+@login_required
 def project(request, project_id):
     """Page displaying details and tickets of a project."""
     project = Project.objects.get(id=project_id)
@@ -21,6 +24,7 @@ def project(request, project_id):
     context = {'project': project, 'tickets': tickets}
     return render(request, 'bugs/project.html', context)
 
+@login_required
 def ticket(request, project_id, ticket_id):
     """Page displaying details of a ticket."""
     project = Project.objects.get(id=project_id)
@@ -52,6 +56,7 @@ def ticket(request, project_id, ticket_id):
         }
     return render(request, 'bugs/ticket.html', context)
 
+@login_required
 def new_project(request):
     """Create a new project."""
     if request.method != "POST":
@@ -67,6 +72,7 @@ def new_project(request):
     context = {'form': form}
     return render(request, 'bugs/new_project.html', context)
 
+@login_required
 def edit_project(request, project_id):
     """Edit a current project."""
     project = Project.objects.get(id=project_id)
@@ -85,6 +91,7 @@ def edit_project(request, project_id):
     context = {'project': project, 'form': form}
     return render(request, 'bugs/edit_project.html', context)
 
+@login_required
 def new_ticket(request, project_id):
     """Create a new ticket for a project."""
     project = Project.objects.get(id=project_id)
@@ -107,6 +114,7 @@ def new_ticket(request, project_id):
     context = {'project': project, 'form': form}
     return render(request, 'bugs/new_ticket.html', context)
 
+@login_required
 def edit_ticket(request, project_id, ticket_id):
     """Edit an exisiting ticket."""
     project = Project.objects.get(id=project_id)
@@ -124,6 +132,7 @@ def edit_ticket(request, project_id, ticket_id):
     context = {'project': project, 'ticket': ticket, 'form': form}
     return render(request, 'bugs/edit_ticket.html', context)
 
+@login_required
 def edit_comment(request, prj_id, tkt_id, cmt_id):
     """Edit existing comment."""
     project = Project.objects.get(id=prj_id)

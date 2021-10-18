@@ -9,7 +9,7 @@
       {{ form.as_p }}
 
       <button name="submit">Submit</button>
-      <input type="hidden" name="next" value="bugs:index">
+      <input type="hidden" name="next" value="{% url 'bugs:index' %}">
 
     </form>
 {% endblock content %}
