@@ -2,7 +2,7 @@ from django.contrib.auth.base_user import BaseUserManager
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, first_name=None, last_name=None,
-                    **extra_fields):
+                    is_active=False, **extra_fields):
         """
         Creates and saves a User with the given email and password.
         """
@@ -11,6 +11,9 @@ class UserManager(BaseUserManager):
 
         user = self.model(
             email=self.normalize_email(email),
+            first_name = first_name,
+            last_name = last_name,
+            is_active = is_active,
             **extra_fields
         )
 
@@ -19,7 +22,7 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password, first_name=None, last_name=None,
-                         **extra_fields):
+                         is_active=True, **extra_fields):
         """
         Creates and saves a superuser with the given email and password.
         """
@@ -32,6 +35,7 @@ class UserManager(BaseUserManager):
             password=password,
             first_name=first_name,
             last_name=last_name,
+            is_active=is_active
             **extra_fields
         )
 
