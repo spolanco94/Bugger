@@ -4,29 +4,35 @@ from .managers import UserManager
 from django.db.models.base import Model
 from django.core.mail import send_mail
 
-class Roles(models.Model):
-    """User roles"""
-    ADMIN = 1
-    MANAGER = 2
-    DEVELOPER = 3
-    USER = 4
-    ROLE_CHOICES = (
-        (ADMIN, 'admin'),
-        (MANAGER, 'manager'),
-        (DEVELOPER, 'developer'),
-        (USER, 'user'),
-    )
+# class Roles(models.Model):
+#     """User roles"""
+#     ADMIN = 1
+#     MANAGER = 2
+#     DEVELOPER = 3
+#     USER = 4
+#     ROLE_CHOICES = (
+#         (ADMIN, 'admin'),
+#         (MANAGER, 'manager'),
+#         (DEVELOPER, 'developer'),
+#         (USER, 'user'),
+#     )
 
-    id = models.PositiveSmallIntegerField(
-                                          choices=ROLE_CHOICES, 
-                                          primary_key=True,
-                                          )
+#     id = models.PositiveSmallIntegerField(
+#                                           choices=ROLE_CHOICES, 
+#                                           primary_key=True,
+#                                           )
 
-    def __str__(self) -> str:
-        return self.get_id_display()
+#     def __str__(self) -> str:
+#         return self.get_id_display()
 
 class User(AbstractUser):
-    roles = models.ManyToManyField(Roles)
+    ROLE_CHOICES = (
+        (1, 'Administrator'),
+        (2, 'Project Manager'),
+        (3, 'Developer'),
+        (4, 'Basic'),
+    )
+
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -42,10 +48,15 @@ class User(AbstractUser):
         max_length=50,
         blank=True
     )
+    role = models.CharField(max_length=1, choices=ROLE_CHOICES)
     date_joined = models.DateTimeField(
         verbose_name='date joined',
         auto_now_add=True,
     )
+    is_administrator = models.BooleanField(default=False)
+    is_project_manager = models.BooleanField(default=False)
+    is_developer = models.BooleanField(default=False)
+    is_basic_user = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

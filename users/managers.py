@@ -2,13 +2,14 @@ from django.contrib.auth.base_user import BaseUserManager
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, first_name=None, last_name=None,
-                    **extra_fields):
+                    role="Basic", **extra_fields):
         """
         Creates and saves a User with the given email and password.
         """
         if not email:
             raise ValueError('Users must have an email address.')
-
+        if not role:
+            raise ValueError('User role must be selected.')
         user = self.model(
             email=self.normalize_email(email),
             **extra_fields
