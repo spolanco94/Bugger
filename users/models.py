@@ -4,27 +4,6 @@ from .managers import UserManager
 from django.db.models.base import Model
 from django.core.mail import send_mail
 
-# class Roles(models.Model):
-#     """User roles"""
-#     ADMIN = 1
-#     MANAGER = 2
-#     DEVELOPER = 3
-#     USER = 4
-#     ROLE_CHOICES = (
-#         (ADMIN, 'admin'),
-#         (MANAGER, 'manager'),
-#         (DEVELOPER, 'developer'),
-#         (USER, 'user'),
-#     )
-
-#     id = models.PositiveSmallIntegerField(
-#                                           choices=ROLE_CHOICES, 
-#                                           primary_key=True,
-#                                           )
-
-#     def __str__(self) -> str:
-#         return self.get_id_display()
-
 class User(AbstractUser):
     ROLE_CHOICES = (
         (1, 'Administrator'),
