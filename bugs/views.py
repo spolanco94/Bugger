@@ -40,6 +40,7 @@ def ticket(request, project_id, ticket_id):
         if form.is_valid():
             new_comment = form.save(commit=False)
             new_comment.ticket = ticket
+            new_comment.owner = request.user
             new_comment.save()
             return redirect(
                 'bugs:ticket', 
@@ -65,7 +66,9 @@ def new_project(request):
     else:
         form = ProjectForm(data=request.POST)
         if form.is_valid:
-            form.save()
+            new_project = form.save(commit=False)
+            new_project.owner = request.user
+            new_project.save()
             return redirect('bugs:projects')
 
     # Display a blank or invalid form
@@ -103,11 +106,11 @@ def new_ticket(request, project_id):
         files = request.FILES.getlist('attachments')
         if form.is_valid():
             for f in files:
-                print(f)
                 file_instance = Ticket(attachments=f)
                 file_instance.save()
             new_ticket = form.save(commit=False)
             new_ticket.project = project
+            new_ticket.owner = request.user
             new_ticket.save()
             return redirect('bugs:project', project_id=project.id)
 

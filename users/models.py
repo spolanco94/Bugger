@@ -3,8 +3,31 @@ from django.contrib.auth.models import AbstractUser
 from .managers import UserManager
 from django.db.models.base import Model
 from django.core.mail import send_mail
+from django.conf import settings
+
+class Team(models.Model):
+    """
+        Defines Team model where each user will only be able to belong to 
+        one team at any given time.
+    """
+    name = models.CharField(max_length=125, unique=True)
+    manager = models.OneToOneField(
+        settings.AUTH_USER_MODEL, 
+        verbose_name="team manager", 
+        on_delete=models.CASCADE
+    )
+    description = models.TextField(max_length=1024)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
 
 class User(AbstractUser):
+    """
+        Defines a custom User class where the user's email will serve as their
+        username, and their role will be assigned from a predetermined set of
+        options.
+    """
     ROLE_CHOICES = (
         (1, 'Administrator'),
         (2, 'Project Manager'),
@@ -28,6 +51,7 @@ class User(AbstractUser):
         blank=True
     )
     role = models.CharField(max_length=1, choices=ROLE_CHOICES)
+    team_group = models.ForeignKey(Team, on_delete=models.CASCADE)
     date_joined = models.DateTimeField(
         verbose_name='date joined',
         auto_now_add=True,
