@@ -28,13 +28,13 @@ class User(AbstractUser):
         username, and their role will be assigned from a predetermined set of
         options.
     """
-    ROLE_CHOICES = (
+    ROLE_CHOICES = [
         (1, 'Administrator'),
         (2, 'Project Manager'),
         (3, 'Developer'),
-        (4, 'Basic'),
-    )
-
+        (4, 'Designer'),
+    ]
+    username = None
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -50,8 +50,13 @@ class User(AbstractUser):
         max_length=50,
         blank=True
     )
-    role = models.CharField(max_length=1, choices=ROLE_CHOICES)
-    team_group = models.ForeignKey(Team, on_delete=models.CASCADE)
+    role = models.IntegerField(choices=ROLE_CHOICES)
+    team_group = models.ForeignKey(
+        Team, 
+        on_delete=models.CASCADE, 
+        null=True, 
+        blank=True,
+    )
     date_joined = models.DateTimeField(
         verbose_name='date joined',
         auto_now_add=True,
@@ -59,8 +64,8 @@ class User(AbstractUser):
     is_administrator = models.BooleanField(default=False)
     is_project_manager = models.BooleanField(default=False)
     is_developer = models.BooleanField(default=False)
-    is_basic_user = models.BooleanField(default=False)
-
+    is_designer = models.BooleanField(default=False)
+    
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     
@@ -74,6 +79,9 @@ class User(AbstractUser):
     def email_user(self, subject: str, message: str, from_email: str = ..., 
                    **kwargs: str) -> None:
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+    def update_role_choices(self, new_role: str):
+        self.ROLE_CHOICES.append((len(ROLE_CHOICES), new_role.capitalize()))
 
     def __str__(self):
         return self.email

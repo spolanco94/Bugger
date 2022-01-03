@@ -13,7 +13,21 @@ def register(request):
         form = MyUserCreationForm(data=request.POST)
 
         if form.is_valid():
-            new_user = form.save()
+            new_user = form.save(commit=False)
+
+            new_user.is_active = False
+            if new_user.role == 1:
+                new_user.is_administrator = True
+                new_user.is_superuser = True  
+                new_user.is_staff = True
+            elif new_user.role == 2:
+                new_user.is_project_manager = True
+            elif new_user.role == 3:
+                new_user.is_developer = True
+            elif new_user.role == 4:
+                new_user.is_designer = True
+
+            new_user.save()
 
             # log in new user
             login(request, new_user)
