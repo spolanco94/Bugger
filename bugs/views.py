@@ -1,9 +1,16 @@
 from typing import ContextManager
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 
 from .models import Comment, Project, Ticket
 from .forms import CommentForm, ProjectForm, TicketForm
+from users.models import Team
+
+def check_owner(request, obj):
+    """Checks if the requesting user is the owner of the object in question."""
+    if obj.owner != request.user:
+        raise Http404
 
 def index(request):
     """The home page for Bugger"""
@@ -79,6 +86,7 @@ def new_project(request):
 def edit_project(request, project_id):
     """Edit a current project."""
     project = Project.objects.get(id=project_id)
+    check_owner(request, project)
 
     if request.method != 'POST':
         # Generate form prefilled with current data
@@ -122,6 +130,7 @@ def edit_ticket(request, project_id, ticket_id):
     """Edit an exisiting ticket."""
     project = Project.objects.get(id=project_id)
     ticket = Ticket.objects.get(id=ticket_id)
+    check_owner(request, ticket)
 
     if request.method != 'POST':
         # Prefill form with data from database
@@ -141,6 +150,7 @@ def edit_comment(request, prj_id, tkt_id, cmt_id):
     project = Project.objects.get(id=prj_id)
     ticket = Ticket.objects.get(id=tkt_id)
     comment = Comment.objects.get(id=cmt_id)
+    check_owner(request, comment)
 
     if request.method != 'POST':
         form = CommentForm(instance=comment)
@@ -161,3 +171,12 @@ def edit_comment(request, prj_id, tkt_id, cmt_id):
                'form': form
               }
     return render(request, 'bugs/edit_comment.html', context)
+
+@login_required
+def teams(request):
+    """Page displaying all teams and their respective manager(s)."""
+    if not request.user.is_administrator and not request.user.is_project_manager:
+        raise Http404
+    teams = Team.objects.order_by('date_created')
+    context = {'teams': teams}
+    return render(request, 'bugs/teams.html', context)

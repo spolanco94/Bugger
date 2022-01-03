@@ -2,4 +2,7 @@
 
 {% block content %}
   <h3><a href="{% url 'bugs:projects' %}">Projects</a></h3>
+  {% if user.is_administrator or user.is_project_manager %}
+    <h3><a href="{% url 'bugs:teams' %}">Teams</a></h3>
+  {% endif %}
 {% endblock content %}

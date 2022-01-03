@@ -44,4 +44,6 @@ urlpatterns = [
         views.edit_comment, 
         name='edit_comment'
         ),
+    # Teams directory page
+    path('teams/', views.teams, name='teams'),
 ]
