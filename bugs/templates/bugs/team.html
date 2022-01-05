@@ -1,0 +1,25 @@
+{% extends 'bugs/base.html' %}
+
+{% block content %}
+  <h2>Team: {{ team.name }}</h2>
+  <p>Description: </p>
+  <p>{{ team.description|linebreaks }}</p>
+
+  <h4>Members</h4>
+  {% comment %} <ul>
+    {% for ticket in tickets %}
+      <li>
+        <p>
+          <a href="{% url 'bugs:ticket' project.id ticket.id%}">
+            {{ ticket.title }}
+          </a>
+        </p>
+      </li>
+    {% empty %}
+      <li>There are no tickets for this project.</li>
+    {% endfor %} {% endcomment %}
+    {% comment %} <p><a href="{% url 'bugs:new_ticket' project.id %}">Add a member</a></p>
+  </ul>
+  <p><a href="{% url 'bugs:edit_project' project.id %}">Edit team</a></p> {% endcomment %}
+
+{% endblock content %}

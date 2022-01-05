@@ -1,5 +1,16 @@
 {% extends 'bugs/base.html' %}
 
 {% block content %}
-    
+    <h3>Teams</h3>
+  <ul>
+    {% for team in teams %}
+        <li>
+          <a href="{% url 'bugs:team' team.id %}">{{ team }}</a>
+        </li>
+        {% empty %}
+          <li>There are no teams.</li>
+        {% endfor %}
+  </ul>
+  <p><a href="{% url 'bugs:new_team' %}">Add a team</a></p>
+
 {% endblock content %}

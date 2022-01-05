@@ -5,6 +5,8 @@ from django.db.models.base import Model
 from django.core.mail import send_mail
 from django.conf import settings
 
+from bugs.models import Project
+
 class Team(models.Model):
     """
         Defines Team model where each user will only be able to belong to 
@@ -17,6 +19,7 @@ class Team(models.Model):
         on_delete=models.CASCADE
     )
     description = models.TextField(max_length=1024)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

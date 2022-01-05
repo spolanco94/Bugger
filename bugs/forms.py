@@ -1,8 +1,10 @@
 from django import forms
 from django.db import models
 from django.forms import widgets
+from django.db.models import Q
 
 from .models import Comment, Project, Ticket
+from users.models import User, Team
 
 class ProjectForm(forms.ModelForm):
     class Meta:
@@ -32,3 +34,22 @@ class CommentForm(forms.ModelForm):
         widgets = {
             'comment': forms.Textarea(attrs={'cols': 60}),
         }
+
+class TeamCreationForm(forms.ModelForm):
+    class Meta:
+        model = Team
+        fields = ['name', 'manager', 'description',]
+        
+        name = forms.CharField()
+        manager = forms.ModelMultipleChoiceField(
+            queryset = User.objects.filter(
+                Q(role=1) &
+                Q(role=2)
+            )
+        )
+        # widgets = {
+        #     'name': forms.CharField(attrs={'is_hidden':False}),
+        #     'manager': forms.ModelMultipleChoiceField(
+        #         queryset=User.objects.filter()
+        #     )
+        # }

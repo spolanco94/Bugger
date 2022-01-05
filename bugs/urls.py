@@ -46,4 +46,8 @@ urlpatterns = [
         ),
     # Teams directory page
     path('teams/', views.teams, name='teams'),
+    # New team page
+    path('new_team/', views.new_team, name='new_team'),
+    # Team page
+    path('teams/<int:team_id>', views.team, name='team'),
 ]

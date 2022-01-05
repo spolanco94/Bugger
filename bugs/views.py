@@ -4,12 +4,17 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 
 from .models import Comment, Project, Ticket
-from .forms import CommentForm, ProjectForm, TicketForm
+from .forms import CommentForm, ProjectForm, TicketForm, TeamCreationForm
 from users.models import Team
 
 def check_owner(request, obj):
     """Checks if the requesting user is the owner of the object in question."""
     if obj.owner != request.user:
+        raise Http404
+
+def check_admin_or_manager(request):
+    """Checks if the requesting user is an administrator or a project manager."""
+    if not request.user.is_administrator and not request.user.is_project_manager:
         raise Http404
 
 def index(request):
@@ -175,8 +180,33 @@ def edit_comment(request, prj_id, tkt_id, cmt_id):
 @login_required
 def teams(request):
     """Page displaying all teams and their respective manager(s)."""
-    if not request.user.is_administrator and not request.user.is_project_manager:
-        raise Http404
+    check_admin_or_manager(request)
+    
     teams = Team.objects.order_by('date_created')
     context = {'teams': teams}
     return render(request, 'bugs/teams.html', context)
+
+@login_required
+def new_team(request):
+    """Form page to create a new team."""
+    check_admin_or_manager(request)
+
+    if request.method != "POST":
+        # No data submitted, create a blank form
+        form = TeamCreationForm()
+    else:
+        form = TeamCreationForm(data=request.POST)
+        if form.is_valid:
+            form.save()
+            return redirect('bugs:teams')
+
+    # Display a blank or invalid form
+    context = {'form': form}
+    return render(request, 'bugs/team_creation.html', context)
+
+@login_required
+def team(request, team_id):
+    """Displays information about a specific team."""
+    team = Team.objects.get(id=team_id)
+    context = {'team': team}
+    return render(request, 'bugs/team.html', context)

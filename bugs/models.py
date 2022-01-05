@@ -10,7 +10,7 @@ class Project(models.Model):
     details = models.TextField()
     date_added = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
+    
     def __str__(self) -> str:
         return self.title
 
