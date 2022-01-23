@@ -1,0 +1,10 @@
+{% extends 'bugs/base.html' %}
+
+{% block content %}
+	<h3>Create a new Team</h3>
+	<form action="{% url 'bugs:new_team' %}" method='post'>
+		{% csrf_token %}
+		{{ form.as_p }}
+		<button name="submit">Create Team</button>
+	</form>
+{% endblock content %}

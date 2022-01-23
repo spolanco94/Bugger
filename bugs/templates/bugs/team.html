@@ -1,0 +1,30 @@
+{% extends 'bugs/base.html' %}
+
+{% block content %}
+  <h2>Team: {{ team.name }}</h2>
+  <p>Description: </p>
+  <p>{{ team.description|linebreaks }}</p>
+
+  <h4>Members</h4>
+    <h4>Manager: {{ team.manager.get_full_name }} | {{ team.manager.email }}</h4>
+    <h4>Project: 
+      {% if team.project == None %}
+        --------
+      {% else %}
+        {{ team.project }}
+      {% endif %}
+    </h4>
+   <ul>
+    {% for member in team.members.all %}
+      <li>
+        <p>
+          {{ member.get_full_name }}
+        </p>
+      </li>
+    {% empty %}
+      <li>There are no members on this team.</li>
+    {% endfor %}
+  </ul>
+  <p><a href="{% url 'bugs:edit_team' team.id %}">Edit Team</a></p>
+
+{% endblock content %}
