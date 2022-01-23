@@ -50,4 +50,6 @@ urlpatterns = [
     path('new_team/', views.new_team, name='new_team'),
     # Team page
     path('teams/<int:team_id>', views.team, name='team'),
+    # Team page
+    path('teams/<int:team_id>/edit_team', views.edit_team, name='edit_team'),
 ]

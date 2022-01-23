@@ -35,21 +35,30 @@ class CommentForm(forms.ModelForm):
             'comment': forms.Textarea(attrs={'cols': 60}),
         }
 
+class CustomMMCF(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        return f"{obj.get_full_name()} | {obj.email}"
+
 class TeamCreationForm(forms.ModelForm):
+
+    name = forms.CharField()   
+    manager = forms.ModelChoiceField(
+        queryset = User.objects.all(), 
+        empty_label=None,
+    )
+    project = forms.ModelChoiceField(
+        queryset = Project.objects.all(),
+        required=False
+    )
+
+    members = CustomMMCF(
+        queryset = User.objects.all(),
+        widget = forms.CheckboxSelectMultiple,
+    )
+
     class Meta:
         model = Team
-        fields = ['name', 'manager', 'description',]
-        
-        name = forms.CharField()
-        manager = forms.ModelMultipleChoiceField(
-            queryset = User.objects.filter(
-                Q(role=1) &
-                Q(role=2)
-            )
-        )
-        # widgets = {
-        #     'name': forms.CharField(attrs={'is_hidden':False}),
-        #     'manager': forms.ModelMultipleChoiceField(
-        #         queryset=User.objects.filter()
-        #     )
-        # }
+        fields = ['name', 'manager', 'project', 'members', 'description',]
+        widgets = {
+            'description': forms.Textarea(attrs={'cols': 40, 'rows': 5})
+        }

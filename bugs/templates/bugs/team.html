@@ -6,20 +6,25 @@
   <p>{{ team.description|linebreaks }}</p>
 
   <h4>Members</h4>
-  {% comment %} <ul>
-    {% for ticket in tickets %}
+    <h4>Manager: {{ team.manager.get_full_name }} | {{ team.manager.email }}</h4>
+    <h4>Project: 
+      {% if team.project == None %}
+        --------
+      {% else %}
+        {{ team.project }}
+      {% endif %}
+    </h4>
+   <ul>
+    {% for member in team.members.all %}
       <li>
         <p>
-          <a href="{% url 'bugs:ticket' project.id ticket.id%}">
-            {{ ticket.title }}
-          </a>
+          {{ member.get_full_name }}
         </p>
       </li>
     {% empty %}
-      <li>There are no tickets for this project.</li>
-    {% endfor %} {% endcomment %}
-    {% comment %} <p><a href="{% url 'bugs:new_ticket' project.id %}">Add a member</a></p>
+      <li>There are no members on this team.</li>
+    {% endfor %}
   </ul>
-  <p><a href="{% url 'bugs:edit_project' project.id %}">Edit team</a></p> {% endcomment %}
+  <p><a href="{% url 'bugs:edit_team' team.id %}">Edit Team</a></p>
 
 {% endblock content %}

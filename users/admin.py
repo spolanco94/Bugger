@@ -5,12 +5,18 @@ from django.contrib.auth.admin import UserAdmin
 from .models import User, Team
 from .forms import MyUserCreationForm, MyUserChangeForm
 
+class TeamInline(admin.StackedInline):
+    model = Team
+    readonly_fields = ('name', 'description',)
+    verbose_name = "Managed Team"
+
 class CustomUserAdmin(UserAdmin):
-    add_form = MyUserCreationForm
-    readonly_fields=('date_joined',)
-    form = MyUserChangeForm
     model = User
-    list_display = ('email', 'first_name', 'last_name', 'team_group', 'date_joined',
+    add_form = MyUserCreationForm
+    form = MyUserChangeForm
+    readonly_fields = ('date_joined',)
+    inlines = [TeamInline, ]
+    list_display = ('email', 'first_name', 'last_name', 'assigned_team', 'date_joined',
                     'is_administrator', 'is_project_manager', 'is_developer', 
                     'is_designer')
     fieldsets = (
@@ -41,7 +47,7 @@ class CustomUserAdmin(UserAdmin):
             {
                 'fields': (
                     'role',
-                    'team_group',
+                    'assigned_team',
                     'is_administrator',
                     'is_project_manager', 
                     'is_developer', 

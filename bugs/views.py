@@ -2,10 +2,11 @@ from typing import ContextManager
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
+from django.db.models import Q
 
 from .models import Comment, Project, Ticket
 from .forms import CommentForm, ProjectForm, TicketForm, TeamCreationForm
-from users.models import Team
+from users.models import Team, User
 
 def check_owner(request, obj):
     """Checks if the requesting user is the owner of the object in question."""
@@ -194,19 +195,88 @@ def new_team(request):
     if request.method != "POST":
         # No data submitted, create a blank form
         form = TeamCreationForm()
+        members = form.fields['members']
+        members.queryset = User.objects.filter(assigned_team=None)
+        
+        manager = form.fields['manager']
+        manager.queryset = User.objects.filter(
+            Q(managed_team=None) & 
+            (Q(is_administrator=True) | Q(is_project_manager=True))
+        )
+
+        project = form.fields['project']
+        project.queryset = Project.objects.filter(team=None)
+        
     else:
         form = TeamCreationForm(data=request.POST)
-        if form.is_valid:
-            form.save()
+        if form.is_valid():
+            new_team = form.save(commit=False)
+
+            # Assign team to manager
+            manager = form.cleaned_data['manager']
+            manager.update_team(new_team)
+            new_team.save()
+            manager.save()
+
+            # Assign the team to each of the remaining members
+            members = form.cleaned_data['members']
+            for member in members:
+                member.update_team(new_team)
+                new_team.save()
+                member.save()
+            
             return redirect('bugs:teams')
 
     # Display a blank or invalid form
     context = {'form': form}
-    return render(request, 'bugs/team_creation.html', context)
+    return render(request, 'bugs/new_team.html', context)
 
 @login_required
 def team(request, team_id):
     """Displays information about a specific team."""
     team = Team.objects.get(id=team_id)
+    
     context = {'team': team}
     return render(request, 'bugs/team.html', context)
+
+@login_required
+def edit_team(request, team_id):
+    """Edit existing comment."""
+    team = Team.objects.get(id=team_id)
+
+    if not request.user.is_administrator and request.user != team.manager:
+        raise Http404
+
+    if request.method != 'POST':
+        form = TeamCreationForm(instance=team)
+        form.fields['members'].initial = (
+            User.objects.filter(assigned_team=team)
+        )
+    else:
+        form = TeamCreationForm(instance=team, data=request.POST)
+        if form.is_valid():
+            team = form.save(commit=False)
+
+            # Assign team to manager
+            manager = form.cleaned_data['manager']
+            manager.update_team(team)
+            team.save()
+            manager.save()
+
+            # Assign the team to each of the remaining members
+            members = form.cleaned_data['members']
+            for curr_member in team.members.all():
+                if curr_member not in members:
+                    curr_member.update_team(None)
+                    print(curr_member)
+                    team.save()
+                    curr_member.save()
+            for member in members:
+                member.update_team(team)
+                team.save()
+                member.save()
+                
+            return redirect('bugs:team', team_id=team.id)
+
+    context = {'team': team, 'form': form}
+    return render(request, 'bugs/edit_team.html', context)
