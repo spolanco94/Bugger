@@ -1,8 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
+from django.http import Http404
 
 from .models import User
 from .forms import MyUserCreationForm, MyUserChangeForm
+
+def check_user(request, user_obj):
+    """Checks if the requesting user is the owner of the object in question."""
+    if user_obj != request.user:
+        raise Http404
 
 def register(request):
     """User registration form."""
@@ -35,3 +41,20 @@ def register(request):
 
     context = {'form': form}
     return render(request, 'registration/register.html', context)
+
+def profile(request, user_id):
+    """Displays user profile with account information."""
+    user = User.objects.get(id=user_id)
+    check_user(request, user)
+
+    if request.method != 'POST':
+        form = MyUserChangeForm(instance=user)
+    else:
+        form = MyUserChangeForm(instance=user, data=request.POST)
+        
+        if form.is_valid():
+            form.save()
+            return redirect('users:profile', user_id=user.id)        
+
+    context = {'user': user, 'form': form}
+    return render(request, 'registration/profile.html', context)

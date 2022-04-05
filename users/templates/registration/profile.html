@@ -1,0 +1,12 @@
+{% extends 'bugs/base.html' %}
+
+{% block content %}
+    <h3>Profile Information</h3>
+
+    <form action="{% url 'users:profile' user.id %}" method='post'>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p>Date joined: {{ user.date_joined }}</p>
+        <button name='submit'>Save</button>
+    </form>
+{% endblock content %}

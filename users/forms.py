@@ -9,8 +9,14 @@ class MyUserCreationForm(UserCreationForm):
         model = User
         fields = ('email', 'first_name', 'last_name', 'role')
 
-class MyUserChangeForm(UserChangeForm):
+class MyUserChangeForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(MyUserChangeForm, self).__init__(*args, **kwargs)
+        # Set disabled fields
+        self.fields['role'].disabled = True
+        self.fields['assigned_team'].disabled = True
+        # self.fields['date_joined'].widget.attrs['readonly'] = True
 
-    class Meta(UserChangeForm):
+    class Meta:
         model = User
-        fields = ('email', 'first_name', 'last_name', 'role')
+        fields = ('email', 'first_name', 'last_name', 'role', 'assigned_team')

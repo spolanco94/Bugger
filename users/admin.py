@@ -16,9 +16,17 @@ class CustomUserAdmin(UserAdmin):
     form = MyUserChangeForm
     readonly_fields = ('date_joined',)
     inlines = [TeamInline, ]
-    list_display = ('email', 'first_name', 'last_name', 'assigned_team', 'date_joined',
-                    'is_administrator', 'is_project_manager', 'is_developer', 
-                    'is_designer')
+    list_display = (
+        'email', 
+        'first_name', 
+        'last_name', 
+        'assigned_team', 
+        'date_joined',
+        'is_administrator', 
+        'is_project_manager', 
+        'is_developer', 
+        'is_designer'
+        )
     fieldsets = (
         (   
             'Personal Info',
@@ -58,7 +66,14 @@ class CustomUserAdmin(UserAdmin):
     )
     add_fieldsets = (
         (None, {
-            'fields': ('email', 'first_name', 'last_name', 'is_staff', 'is_active')}
+            'fields': (
+                'email', 
+                'first_name', 
+                'last_name', 
+                'is_staff', 
+                'is_active'
+                )
+            }
         ),
     )
     search_fields = ('email',)

@@ -195,15 +195,21 @@ def new_team(request):
     if request.method != "POST":
         # No data submitted, create a blank form
         form = TeamCreationForm()
+        
+        # Filter selectable members to those without an assigned team.
         members = form.fields['members']
         members.queryset = User.objects.filter(assigned_team=None)
         
+        # Filter selectable managers to those without a team and are either 
+        # administrator or project manager status.
         manager = form.fields['manager']
         manager.queryset = User.objects.filter(
             Q(managed_team=None) & 
             (Q(is_administrator=True) | Q(is_project_manager=True))
         )
 
+        # Filter projects to those without a team assigned. 
+        # (May be changed so that projects can have multiple teams assigned.)
         project = form.fields['project']
         project.queryset = Project.objects.filter(team=None)
         

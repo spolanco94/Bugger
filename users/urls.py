@@ -26,4 +26,6 @@ urlpatterns = [
         name='password_reset_complete'),
     # Default authentication URL's
     path('', include('django.contrib.auth.urls')),
+    # View and/or edit user profile 
+    path('<int:user_id>/profile', views.profile, name='profile'),
 ]
