@@ -93,7 +93,7 @@ class User(AbstractUser):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
     def update_role_choices(self, new_role: str):
-        self.ROLE_CHOICES.append((len(ROLE_CHOICES), new_role.capitalize()))
+        self.ROLE_CHOICES.append((len(self.ROLE_CHOICES), new_role.capitalize()))
     
     def update_team(self, team):
         if team == None:
