@@ -3,7 +3,7 @@ from django.db import models
 from django.forms import widgets
 from django.db.models import Q
 
-from .models import Comment, Project, Ticket
+from .models import Comment, Project, Ticket, Files
 from users.models import User, Team
 
 class ProjectForm(forms.ModelForm):
@@ -21,10 +21,18 @@ class ProjectForm(forms.ModelForm):
 class TicketForm(forms.ModelForm):
     class Meta:
         model = Ticket
-        fields = ['title', 'details', 'priority_level', 'attachments']
+        fields = ['title', 'details', 'priority_level',]
         widgets = {
             'details': forms.Textarea(attrs={'cols': 80}),
-            'attachments': widgets.ClearableFileInput(attrs={'multiple': True})
+            # 'attachments': widgets.ClearableFileInput(attrs={'multiple': True})
+        }
+
+class FileForm(forms.ModelForm):
+    class Meta:
+        model = Files
+        fields = ['img']
+        widgets = {
+            'img': widgets.ClearableFileInput(attrs={'multiple': True}),
         }
 
 class CommentForm(forms.ModelForm):

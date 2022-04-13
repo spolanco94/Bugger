@@ -32,11 +32,11 @@ class Ticket(models.Model):
         default='M',
     )
     date_added = models.DateTimeField(auto_now_add=True)
-    attachments = models.FileField(
-        upload_to='attachments/%Y/%m/%d', 
-        blank=True, 
-        null=True
-    )
+    # attachments = models.FileField(
+    #     upload_to='attachments/%Y/%m/%d', 
+    #     blank=True, 
+    #     null=True
+    # )
 
     class Meta:
         verbose_name_plural = 'tickets'
@@ -56,3 +56,15 @@ class Comment(models.Model):
             return f"{self.comment[:50]}..."
         
         return self.comment
+
+class Files(models.Model):
+    name = models.CharField(max_length=150)
+    img = models.FileField(
+        upload_to='attachments/%Y/%m/%d', 
+        null=False, 
+        blank=False
+    )
+    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return self.name

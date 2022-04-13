@@ -1,11 +1,16 @@
+from msilib.schema import File
+from operator import indexOf
+import os
 from typing import ContextManager
+from django.conf import settings
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.db.models import Q
+from django.core.files.storage import default_storage
 
-from .models import Comment, Project, Ticket
-from .forms import CommentForm, ProjectForm, TicketForm, TeamCreationForm
+from .models import Comment, Project, Ticket, Files
+from .forms import CommentForm, ProjectForm, TicketForm, FileForm, TeamCreationForm
 from users.models import Team, User
 
 def check_owner(request, obj):
@@ -43,7 +48,15 @@ def ticket(request, project_id, ticket_id):
     project = Project.objects.get(id=project_id)
     ticket = Ticket.objects.get(id=ticket_id)
     comments = ticket.comment_set.order_by('date_added')
-    
+    files = ticket.files_set.order_by('name')
+
+    for file in files:
+        print(file.img.url)
+        # try:
+        #     default_storage.exists(os.path.join(file.img.url))
+        # except IOError:
+        #     files.remove(file)
+
     # Comment system for tickets
     new_comment = None
     if request.method != 'POST':
@@ -65,6 +78,7 @@ def ticket(request, project_id, ticket_id):
         'ticket': ticket, 
         'project': project, 
         'comments': comments,
+        'files': files,
         'new_comment': new_comment,
         'form': form        
         }
@@ -114,21 +128,31 @@ def new_ticket(request, project_id):
     project = Project.objects.get(id=project_id)
 
     if request.method != 'POST':
-        form = TicketForm()
+        ticket_form = TicketForm()
+        file_form = FileForm()
     else:
-        form = TicketForm(request.POST, request.FILES)
-        files = request.FILES.getlist('attachments')
-        if form.is_valid():
-            for f in files:
-                file_instance = Ticket(attachments=f)
-                file_instance.save()
-            new_ticket = form.save(commit=False)
+        ticket_form = TicketForm(request.POST)
+        file_form = FileForm(request.POST, request.FILES)
+        files = request.FILES.getlist('img')
+        if ticket_form.is_valid() and file_form.is_valid():
+            new_ticket = ticket_form.save(commit=False)
             new_ticket.project = project
             new_ticket.owner = request.user
             new_ticket.save()
-            return redirect('bugs:project', project_id=project.id)
+            
+            # Attach files
+            for count, f in enumerate(files, 1):
+                file_instance = Files(name=f'attachment_{count}', img=f, ticket=new_ticket)
+                file_instance.save()
+            file_form.save()
 
-    context = {'project': project, 'form': form}
+            return redirect('bugs:ticket', project_id=project.id, ticket_id=new_ticket.id)
+
+    context = {
+        'project': project, 
+        'ticket_form': ticket_form, 
+        'file_form': file_form
+    }
     return render(request, 'bugs/new_ticket.html', context)
 
 @login_required
@@ -136,18 +160,35 @@ def edit_ticket(request, project_id, ticket_id):
     """Edit an exisiting ticket."""
     project = Project.objects.get(id=project_id)
     ticket = Ticket.objects.get(id=ticket_id)
+    # files = Files.objects.get(ticket=ticket)
     check_owner(request, ticket)
 
     if request.method != 'POST':
         # Prefill form with data from database
-        form = TicketForm(instance=ticket)
+        ticket_form = TicketForm(instance=ticket)
+        # for file in files:
+        #     file_form = FileForm(instance=file)
     else:
-        form = TicketForm(instance=ticket, data=request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('bugs:project', project_id=project.id)
+        ticket_form = TicketForm(instance=ticket, data=request.POST)
+        # file_form = FileForm(instance=file, data=request.POST, files=request.FILES)
+        # files = request.FILES.getlist('img')
+        if ticket_form.is_valid():
+            ticket = ticket_form.save(commit=False)
+            ticket.save()
+            
+            # for count, f in enumerate(files, 1):
+            #     file_instance = Files(name=f'attachment_{count}', img=f, ticket=ticket)
+            #     file_instance.save()
+            # file_form.save()
+            
+            return redirect('bugs:ticket', project_id=project.id, ticket_id=ticket.id)
     
-    context = {'project': project, 'ticket': ticket, 'form': form}
+    context = {
+        'project': project, 
+        'ticket': ticket, 
+        'ticket_form': ticket_form, 
+        # 'file_form': file_form
+    }
     return render(request, 'bugs/edit_ticket.html', context)
 
 @login_required
