@@ -1,3 +1,4 @@
+from pyexpat import model
 from django import forms
 from django.db import models
 from django.forms import widgets
@@ -26,6 +27,11 @@ class TicketForm(forms.ModelForm):
             'details': forms.Textarea(attrs={'cols': 80}),
             # 'attachments': widgets.ClearableFileInput(attrs={'multiple': True})
         }
+
+class StatusForm(forms.ModelForm):
+    class Meta:
+        model = Ticket
+        fields = ['status']
 
 class FileForm(forms.ModelForm):
     class Meta:

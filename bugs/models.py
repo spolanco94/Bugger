@@ -22,6 +22,13 @@ class Ticket(models.Model):
         ('L', 'Low'),
     ]
     
+    STATUS_CHOICES = [
+        ('S', 'Submitted'),
+        ('R', 'In Review'),
+        ('A', 'Assigned'),
+        ('C', 'Closed'),
+    ]
+
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
     details = models.TextField()
@@ -30,6 +37,11 @@ class Ticket(models.Model):
         max_length=1, 
         choices=PRIORITY_LEVEL_CHOICES,
         default='M',
+    )
+    status = models.CharField(
+        max_length=1, 
+        choices=STATUS_CHOICES,
+        default='S',
     )
     date_added = models.DateTimeField(auto_now_add=True)
     # attachments = models.FileField(
@@ -61,8 +73,8 @@ class Files(models.Model):
     name = models.CharField(max_length=150)
     img = models.FileField(
         upload_to='attachments/%Y/%m/%d', 
-        null=False, 
-        blank=False
+        null=True, 
+        blank=True
     )
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
 

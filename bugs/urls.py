@@ -38,6 +38,12 @@ urlpatterns = [
         views.edit_ticket, 
         name='edit_ticket'
         ),
+    # Update ticket status page
+    path(
+        'projects/<int:project_id>/tickets/<int:ticket_id>/ticket_status_update/', 
+        views.update_ticket_status, 
+        name='update_ticket_status'
+        ),
     # Edit comment page
     path(
         'projects/<int:prj_id>/tickets/<int:tkt_id>/<int:cmt_id>/edit_comment/', 

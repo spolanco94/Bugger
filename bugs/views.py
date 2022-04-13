@@ -10,7 +10,7 @@ from django.db.models import Q
 from django.core.files.storage import default_storage
 
 from .models import Comment, Project, Ticket, Files
-from .forms import CommentForm, ProjectForm, TicketForm, FileForm, TeamCreationForm
+from .forms import CommentForm, ProjectForm, TicketForm, FileForm, TeamCreationForm, StatusForm
 from users.models import Team, User
 
 def check_owner(request, obj):
@@ -50,8 +50,8 @@ def ticket(request, project_id, ticket_id):
     comments = ticket.comment_set.order_by('date_added')
     files = ticket.files_set.order_by('name')
 
-    for file in files:
-        print(file.img.url)
+    # for file in files:
+    #     print(file.img.url)
         # try:
         #     default_storage.exists(os.path.join(file.img.url))
         # except IOError:
@@ -138,13 +138,16 @@ def new_ticket(request, project_id):
             new_ticket = ticket_form.save(commit=False)
             new_ticket.project = project
             new_ticket.owner = request.user
+            new_ticket.status = 'S'
             new_ticket.save()
             
             # Attach files
             for count, f in enumerate(files, 1):
-                file_instance = Files(name=f'attachment_{count}', img=f, ticket=new_ticket)
+                file_instance = Files(name=f'attachment_{count}', img=f)
                 file_instance.save()
-            file_form.save()
+            new_files = file_form.save(commit=False)
+            new_files.ticket = new_ticket
+            new_files.save()
 
             return redirect('bugs:ticket', project_id=project.id, ticket_id=new_ticket.id)
 
@@ -190,6 +193,30 @@ def edit_ticket(request, project_id, ticket_id):
         # 'file_form': file_form
     }
     return render(request, 'bugs/edit_ticket.html', context)
+
+@login_required
+def update_ticket_status(request, project_id, ticket_id):
+    project = Project.objects.get(id=project_id)
+    ticket = Ticket.objects.get(id=ticket_id)
+    check_admin_or_manager(request)
+
+    if request.method != 'POST':
+        # Prefill form with data from database
+        form = StatusForm(instance=ticket)
+    else:
+        form = StatusForm(instance=ticket, data=request.POST)
+
+        if form.is_valid():
+            ticket.save()
+            
+            return redirect('bugs:ticket', project_id=project.id, ticket_id=ticket.id)
+    
+    context = {
+        'project': project, 
+        'ticket': ticket, 
+        'form': form,
+    }
+    return render(request, 'bugs/update_ticket_status.html', context)
 
 @login_required
 def edit_comment(request, prj_id, tkt_id, cmt_id):

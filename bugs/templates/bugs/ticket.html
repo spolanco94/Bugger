@@ -8,13 +8,26 @@
   <p>{{ ticket.details|linebreaks }}</p>
 
   <ul>
-    {% for file in files %}
-      {% comment %} {% if {{file.img.url}} %}{% endif %} {% endcomment %}
-      <li><a href="{{file.img.url}}" download>{{ file.name }}</a></li>
-    {% empty %}
-      <li>There are no attachments for this ticket.</li>
-    {% endfor %}
+    {% if file.count > 0 %}
+      {% for file in files %}
+        {% comment %} {% if {{file.img.url}} %}{% endif %} {% endcomment %}
+        <li><a href="{{file.img.url}}" download>{{ file.name }}</a></li>
+      {% empty %}
+        <li>There are no attachments for this ticket.</li>
+      {% endfor %}
+    {% endif %}
   </ul>
+
+  <h3>Status:</h3>
+  <p>
+    {{ ticket.get_status_display }} 
+    {% comment %} Only display update route if the  {% endcomment %}
+    {% for team in project.team_set.all %}
+      {% if user.is_administrator or team.manager == user %}
+        - <a href="{% url 'bugs:update_ticket_status' project.id ticket.id %}">Update</a>
+      {% endif %}
+    {% endfor %}
+  </p>
 
   <p>
     <a href="{% url 'bugs:edit_ticket' project.id ticket.id %}">Edit ticket</a>

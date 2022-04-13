@@ -3,8 +3,11 @@
 {% block content %}
   <h2>Project: {{ project.title }}</h2>
   <p>{{ project.date_added|date:'M d, Y' }}</p>
-  <p>Description: </p>
-  <p>{{ project.details|linebreaks }}</p>
+  <p>Description: {{ project.details|linebreaks }}</p>
+  <h3>Team(s):</h3>
+  {% for team in project.team_set.all %}
+    <ul><a href="{% url 'bugs:team' team.id %}">{{ team.name }}</a></ul>
+  {% endfor %}
 
   <h4>Tickets</h4>
   <ul>
