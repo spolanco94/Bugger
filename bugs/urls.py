@@ -44,6 +44,12 @@ urlpatterns = [
         views.update_ticket_status, 
         name='update_ticket_status'
         ),
+    # Assign ticket to a user
+    path(
+        'projects/<int:project_id>/tickets/<int:ticket_id>/assign_ticket/', 
+        views.assign_ticket, 
+        name='assign_ticket'
+        ),
     # Edit comment page
     path(
         'projects/<int:prj_id>/tickets/<int:tkt_id>/<int:cmt_id>/edit_comment/', 

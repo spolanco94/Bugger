@@ -76,3 +76,13 @@ class TeamCreationForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'cols': 40, 'rows': 5})
         }
+
+class AssignTicketForm(forms.ModelForm):
+    class Meta:
+        model = Ticket
+        assignees = CustomMMCF(
+            queryset = User.objects.all(),
+            widget = forms.CheckboxSelectMultiple,
+        )
+
+        fields = ['assignees',]

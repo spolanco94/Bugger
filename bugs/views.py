@@ -10,7 +10,8 @@ from django.db.models import Q
 from django.core.files.storage import default_storage
 
 from .models import Comment, Project, Ticket, Files
-from .forms import CommentForm, ProjectForm, TicketForm, FileForm, TeamCreationForm, StatusForm
+from .forms import CommentForm, ProjectForm, TicketForm, FileForm, TeamCreationForm, StatusForm, AssignTicketForm
+
 from users.models import Team, User
 
 def check_owner(request, obj):
@@ -49,7 +50,7 @@ def ticket(request, project_id, ticket_id):
     ticket = Ticket.objects.get(id=ticket_id)
     comments = ticket.comment_set.order_by('date_added')
     files = ticket.files_set.order_by('name')
-
+    print(ticket.assignees.all())
     # for file in files:
     #     print(file.img.url)
         # try:
@@ -207,6 +208,7 @@ def update_ticket_status(request, project_id, ticket_id):
         form = StatusForm(instance=ticket, data=request.POST)
 
         if form.is_valid():
+            ticket = form.save(commit=False)
             ticket.save()
             
             return redirect('bugs:ticket', project_id=project.id, ticket_id=ticket.id)
@@ -217,6 +219,38 @@ def update_ticket_status(request, project_id, ticket_id):
         'form': form,
     }
     return render(request, 'bugs/update_ticket_status.html', context)
+
+@login_required
+def assign_ticket(request, project_id, ticket_id):
+    project = Project.objects.get(id=project_id)
+    ticket = Ticket.objects.get(id=ticket_id)
+    check_admin_or_manager(request)
+
+    if request.method != 'POST':
+        # Prefill form with data from database
+        form = AssignTicketForm(instance=ticket)
+    else:
+        form = AssignTicketForm(instance=ticket, data=request.POST)
+
+        if form.is_valid():
+            ticket = form.save(commit=False)
+            
+            assignees = form.cleaned_data['assignees']
+            for user in assignees:
+                ticket.assign_ticket(user)
+                ticket.save()
+                user.save()
+
+            ticket.save()
+            
+            return redirect('bugs:ticket', project_id=project.id, ticket_id=ticket.id)
+    
+    context = {
+        'project': project, 
+        'ticket': ticket, 
+        'form': form,
+    }
+    return render(request, 'bugs/assign_ticket.html', context)
 
 @login_required
 def edit_comment(request, prj_id, tkt_id, cmt_id):

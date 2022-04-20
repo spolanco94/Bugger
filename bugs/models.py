@@ -32,7 +32,10 @@ class Ticket(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
     details = models.TextField()
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE,
+        related_name='ticket_owner')
     priority_level = models.CharField(
         max_length=1, 
         choices=PRIORITY_LEVEL_CHOICES,
@@ -42,6 +45,11 @@ class Ticket(models.Model):
         max_length=1, 
         choices=STATUS_CHOICES,
         default='S',
+    )
+    assignees = models.ManyToManyField(
+        "users.User", 
+        related_name='ticket_assignees',
+        blank=True
     )
     date_added = models.DateTimeField(auto_now_add=True)
     # attachments = models.FileField(
@@ -55,6 +63,11 @@ class Ticket(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+    def assign_ticket(self, user):
+        if user == None:
+            return
+        user.ticket_assignees.add(self)
 
 class Comment(models.Model):
     """A comment made by a user directly on a ticket."""
