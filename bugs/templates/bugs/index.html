@@ -1,8 +1,15 @@
 {% extends 'bugs/base.html' %}
 
 {% block content %}
-  <h3><a href="{% url 'bugs:projects' %}">Projects</a></h3>
-  {% if user.is_administrator or user.is_project_manager %}
+  {% if user.is_authenticated %}
+    <h3><a href="{% url 'bugs:projects' %}">Projects</a></h3>
     <h3><a href="{% url 'bugs:teams' %}">Teams</a></h3>
+  {% else %}
+    {% if request.path == '/' %}
+      <h1 class="cover-heading">Bugger</h1>
+      <p class="lead opener">
+        The definitive Project Management System where you can take charge and run your projects, instead of letting them run you.
+      </p>
+    {% endif %}
   {% endif %}
 {% endblock content %}
