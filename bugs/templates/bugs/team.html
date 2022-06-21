@@ -25,6 +25,8 @@
       <li>There are no members on this team.</li>
     {% endfor %}
   </ul>
-  <p><a href="{% url 'bugs:edit_team' team.id %}">Edit Team</a></p>
+  {% if user.is_administrator or user.is_project_manager %}
+    <p><a href="{% url 'bugs:edit_team' team.id %}">Edit Team</a></p>
+  {% endif %}
 
 {% endblock content %}

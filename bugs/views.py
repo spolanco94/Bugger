@@ -22,7 +22,8 @@ def check_owner(request, obj):
 def check_admin_or_manager(request):
     """Checks if the requesting user is an administrator or a project manager."""
     if not request.user.is_administrator and not request.user.is_project_manager:
-        raise Http404
+        return False
+    return True
 
 def index(request):
     """The home page for Bugger"""
@@ -283,7 +284,15 @@ def edit_comment(request, prj_id, tkt_id, cmt_id):
 @login_required
 def teams(request):
     """Page displaying all teams and their respective manager(s)."""
-    check_admin_or_manager(request)
+    # Check if requesting user is an admin or manager
+    if not check_admin_or_manager(request):
+        # print(f'user: {request.user.assigned_team.id}')
+        # If not, check if they are assigned to a team.
+        # If they are, direct them to that teams' page. Otherwise raise Http404 error
+        if request.user.assigned_team:
+            return team(request, request.user.assigned_team.id)
+        
+        raise Http404
     
     teams = Team.objects.order_by('date_created')
     context = {'teams': teams}
