@@ -12,6 +12,8 @@
   {% bootstrap_css %}
   {% bootstrap_javascript jquery='full' %}
   <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+  <script src="{% static 'js/scripts.js' %}" async></script>
 </head>
 <body class="text-center">
   <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
@@ -32,12 +34,24 @@
         </nav>
       </div>
     </header>
-    <main role="main" class="inner cover">      
-      {% block content %}{% endblock content %}
+    <main role="main" class="inner cover">   
+      <div class="wrapper">
+        {% block content %}{% endblock content %}
+      </div>   
     </main>
   </div>
-  
-  
-  <script src="{% static 'js/scripts.js' %}"></script>
+
+  {% if user.is_authenticated %}
+    <div class="container-fluid">
+      <div class="row">
+        <nav id="sidebar-sticky pt-3">
+          <ul class="nav flex-column">
+            <li class="nav-item"><a href="{% url 'bugs:projects' %}">Projects</a></li>
+            <li class="nav-item"><a href="{% url 'bugs:teams' %}">Teams</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  {% endif %}
 </body>
 </html>

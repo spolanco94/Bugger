@@ -1,10 +1,9 @@
 {% extends 'bugs/base.html' %}
+{% load bootstrap4 %}
+{% load static %}
 
 {% block content %}
-  {% if user.is_authenticated %}
-    <h3><a href="{% url 'bugs:projects' %}">Projects</a></h3>
-    <h3><a href="{% url 'bugs:teams' %}">Teams</a></h3>
-  {% else %}
+  {% if not user.is_authenticated %}
     {% if request.path == '/' %}
       <h1 class="cover-heading">Bugger</h1>
       <p class="lead opener">
