@@ -34,15 +34,8 @@
         </nav>
       </div>
     </header>
-    <main role="main" class="inner cover">   
-      <div class="wrapper">
-        {% block content %}{% endblock content %}
-      </div>   
-    </main>
-  </div>
-
-  {% if user.is_authenticated %}
-    <div class="container-fluid">
+    {% if user.is_authenticated %}
+    <div class="container-fluid sidebar">
       <div class="row">
         <nav id="sidebar-sticky pt-3">
           <ul class="nav flex-column">
@@ -53,5 +46,11 @@
       </div>
     </div>
   {% endif %}
+    <main role="main" class="inner cover">   
+      <div class="wrapper">
+        {% block content %}{% endblock content %}
+      </div>   
+    </main>
+  </div>
 </body>
 </html>
