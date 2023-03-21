@@ -1,26 +1,28 @@
-html, body, .wrapper {
-    height: 100%;
+html, body {
+    min-height: 100%;
     width: 100%;
-    background-color: #968E80;
+    background-image: linear-gradient(to right top, #1e6200, #007b53, #00909f, #009fde, #5ea4ff);
+    color: #ababab;
+    font-weight:800;
 }
-.wrapper {
+/* .wrapper {
     color: rgba(255, 255, 255, .8);
     text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
     box-shadow: 5px 5px 20px rgba(0, 0, 0, .5);
     padding: 20px;
     border-radius: 20px;
-}
+} */
 .pms{
-    color: #6A41AB;
+    color: #b83535;
 }
-a, a:focus, a:hover {
-    color: #AD8B8B;
+.custom-mb {
+    margin-bottom: 30vh!important;
 }
 .cover-container {
     max-width: 42em;
 }
 .cover-heading, .temp-heading {
-    color: #f0f0f0;
+    color: #E0F1FF;
     font-size: 2.5rem;
     margin-bottom: 20px;
 }
@@ -30,18 +32,19 @@ a, a:focus, a:hover {
 }
 .masthead {
     margin-bottom: 50px;
+    /* position: fixed; */
     /* background-color: #7E8271; */
 }
 .masthead-brand {
     margin-bottom: 10px;
 }
 .masthead-brand > a {
-    color: #AD4949;
+    color: #E0F1FF;
 }
 .nav-masthead .nav-link {
     padding: .25rem 0;
     font-weight: 700;
-    color: #AD4949;
+    color: #E0F1FF;
     background-color: transparent;
     border-bottom: .25rem solid transparent;
 }
@@ -51,6 +54,7 @@ a, a:focus, a:hover {
     font-weight: 700;
     padding: 0.25rem 0;
 }
+
 .nav-masthead .nav-link:hover,
 .nav-masthead .nav-link:focus {
     border-bottom-color: rgba(10, 10, 10, .25);
@@ -84,11 +88,37 @@ a, a:focus, a:hover {
     list-style: none;
     color: #f0f0f0;
 }
-@media (min-width: 1000px) {
+.side-links{
+    display: none;
+}
+.icon {
+    color: #0F0F0F;
+}
+.content{
+    padding: 20px;
+    margin-bottom: 1200px;
+}
+@media (min-width: 1200px) {
     .masthead-brand {
         float: left;
     }
     .nav-masthead {
         float: right;
+    }
+    .sidebar {
+        position: fixed;
+        top: 0;
+        padding-top: 20vh;
+        left: 0;
+        bottom: 0;
+        width: 250px;
+        overflow-y: scroll;
+        background-color: rgba(0, 0, 0, .1);
+    }
+    .side-links{
+        display: block;
+    }
+    .icon {
+        display: none;
     }
 }
