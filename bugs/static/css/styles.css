@@ -1,5 +1,5 @@
 html, body {
-    min-height: 100%;
+    height: 100%;
     width: 100%;
     background-image: linear-gradient(to right top, #1e6200, #007b53, #00909f, #009fde, #5ea4ff);
     color: #ababab;
@@ -32,7 +32,7 @@ html, body {
 }
 .masthead {
     margin-bottom: 50px;
-    /* position: fixed; */
+    /* position:relative; */
     /* background-color: #7E8271; */
 }
 .masthead-brand {
@@ -96,7 +96,7 @@ html, body {
 }
 .content{
     padding: 20px;
-    margin-bottom: 1200px;
+    margin-bottom: 120px;
 }
 @media (min-width: 1200px) {
     .masthead-brand {

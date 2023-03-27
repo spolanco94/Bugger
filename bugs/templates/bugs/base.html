@@ -18,17 +18,19 @@
 </head>
 <body class="text-center">
   <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
-    <header class="masthead fixed-top">
-      <div class="inner">
+    <header class="masthead">
+      <div class="inner fixed-top p-5">
         <h2 class="masthead-brand">
           <a href="{% url 'bugs:index' %}">Bugger</a>
         </h2>
         <nav class="nav nav-masthead justify-content-center">
           {% if user.is_authenticated %}
             <p class="greeting">Hello,</p><a class="nav-link" href="{% url 'users:profile' user.id %}">{{ user.first_name }}</a>
-            <a class="nav-link" href="{% url 'users:logout' %}">Log out</a>
+            <a class="nav-link" href="{% url 'users:logout' %}">Log Out</a>
             <a class="nav-link" href="{% url 'bugs:projects' %}">Projects</a>
-            <a class="nav-link" href="{% url 'bugs:teams' %}">Teams</a>
+            {% if user.is_administrator or team.manager == user %}
+              <a class="nav-link" href="{% url 'bugs:teams' %}">Teams</a>
+            {% endif %}
           {% else %}
             <a class="nav-link" href="{% url 'users:login' %}">Log in</a>
             <a class="nav-link" href="{% url 'users:register' %}">Register</a>
