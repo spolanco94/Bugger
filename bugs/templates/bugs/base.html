@@ -18,11 +18,13 @@
 </head>
 <body class="text-center">
   <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
-    <header class="masthead">
+    <header class="masthead custom-mb">
       <div class="inner fixed-top p-5">
-        <h2 class="masthead-brand">
-          <a href="{% url 'bugs:index' %}">Bugger</a>
-        </h2>
+        <h1 class="masthead-brand">
+          <a href="{% url 'bugs:index' %}"><img class="logo" src="{% static 'img/winbug.svg' %}" alt="Bugger icon">
+          Bugger
+          </a>
+        </h1>
         <nav class="nav nav-masthead justify-content-center">
           {% if user.is_authenticated %}
             <p class="greeting">Hello,</p><a class="nav-link" href="{% url 'users:profile' user.id %}">{{ user.first_name }}</a>
@@ -39,9 +41,7 @@
         </nav>
       </div>
     </header>
-    {% if request.get_full_path == "/" %}
-      <div class="custom-mb"></div>
-    {% endif %}
+    {% comment %} <div class="custom-mb"></div> {% endcomment %}
     <main role="main" class="inner cover">   
       <div class="content">
         {% block content %}{% endblock content %}

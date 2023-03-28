@@ -1,22 +1,29 @@
-html, body {
+html {
+    height: 100%;
+}
+body {
     height: 100%;
     width: 100%;
     background-image: linear-gradient(to right top, #1e6200, #007b53, #00909f, #009fde, #5ea4ff);
-    color: #ababab;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #eaeaea;
     font-weight:800;
 }
-/* .wrapper {
-    color: rgba(255, 255, 255, .8);
-    text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
-    box-shadow: 5px 5px 20px rgba(0, 0, 0, .5);
-    padding: 20px;
-    border-radius: 20px;
-} */
+.text-muted {
+    color: #cacaca!important;
+}
+.btn-primary {
+    background-color: #3f89ab!important;
+}
 .pms{
-    color: #b83535;
+    color: #1d688b;
+}
+.logo {
+    height: 50px;
 }
 .custom-mb {
-    margin-bottom: 30vh!important;
+    margin-bottom: 30%!important;
 }
 .cover-container {
     max-width: 42em;
