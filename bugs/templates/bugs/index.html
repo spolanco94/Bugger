@@ -5,6 +5,7 @@
 {% block content %}
   {% if not user.is_authenticated %}
     {% if request.path == '/' %}
+      <h3 class="sub-heading">WELCOME TO</h3>
       <h1 class="cover-heading">Bugger</h1>
       <p class="lead opener">
         The definitive <strong class="pms">Project Management System</strong> where you can take charge and run your projects instead of letting them run you.

@@ -14,10 +14,15 @@ body {
     color: #cacaca!important;
 }
 .btn-primary {
-    background-color: #3f89ab!important;
+    background-color: transparent!important;
+    border-color: #007b53!important;
+    width: 30%;
+}
+.btn-primary:hover {
+    background-color: #349687!important;
 }
 .pms{
-    color: #1d688b;
+    color: #33389d;
 }
 .logo {
     height: 50px;
@@ -28,10 +33,17 @@ body {
 .cover-container {
     max-width: 42em;
 }
-.cover-heading, .temp-heading {
+.cover-heading {
     color: #E0F1FF;
-    font-size: 2.5rem;
-    margin-bottom: 20px;
+    font-size: 3rem;
+    margin-bottom: 30px;
+    font-weight: 800;
+    text-shadow: 2px 2px #3f3f3f;
+}
+.sub-heading {
+    font-size: 1.5rem;
+    color: #E0F1FF;
+    margin-bottom: 0;
 }
 .opener {
     font-size: 1.25rem;

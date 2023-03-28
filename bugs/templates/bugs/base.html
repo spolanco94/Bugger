@@ -34,9 +34,10 @@
               <a class="nav-link" href="{% url 'bugs:teams' %}">Teams</a>
             {% endif %}
           {% else %}
-            <a class="nav-link" href="{% url 'users:login' %}">Log in</a>
+            {% if request.get_full_path != "/users/login/" %}
+              <a class="nav-link" href="{% url 'users:login' %}">Log in</a>
+            {% endif %}
             <a class="nav-link" href="{% url 'users:register' %}">Register</a>
-            <a class="nav-link" href="{% url 'users:password_reset' %}">Password Reset</a>
           {% endif %}
         </nav>
       </div>
