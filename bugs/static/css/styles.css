@@ -16,7 +16,7 @@ body {
 .btn-primary {
     background-color: transparent!important;
     border-color: #007b53!important;
-    width: 30%;
+    width: 10em;
 }
 .btn-primary:hover {
     background-color: #349687!important;
@@ -25,13 +25,18 @@ body {
     color: #33389d;
 }
 .logo {
-    height: 50px;
+    height: 35px;
+    margin-right: 10px;
+    
+}
+.home-content {
+    height: 100vh;
 }
 .custom-mb {
     margin-bottom: 30%!important;
 }
 .cover-container {
-    max-width: 42em;
+    max-width: 90vw;
 }
 .cover-heading {
     color: #E0F1FF;
@@ -73,7 +78,6 @@ body {
     font-weight: 700;
     padding: 0.25rem 0;
 }
-
 .nav-masthead .nav-link:hover,
 .nav-masthead .nav-link:focus {
     border-bottom-color: rgba(10, 10, 10, .25);
@@ -117,7 +121,7 @@ body {
     padding: 20px;
     margin-bottom: 120px;
 }
-@media (min-width: 1200px) {
+@media (min-width: 1000px) {
     .masthead-brand {
         float: left;
     }
@@ -139,5 +143,11 @@ body {
     }
     .icon {
         display: none;
+    }
+    .cover-container {
+        max-width: 42em;
+    }
+    .btn-primary {
+        width: 10em;
     }
 }
