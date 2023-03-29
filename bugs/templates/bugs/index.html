@@ -4,12 +4,21 @@
 
 {% block content %}
   {% if not user.is_authenticated %}
-    {% if request.path == '/' %}
-      <h3 class="sub-heading">WELCOME TO</h3>
-      <h1 class="cover-heading">Bugger</h1>
-      <p class="lead opener">
-        The definitive <strong class="pms">Project Management System</strong> where you can take charge and run your projects instead of letting them run you.
-      </p>
+    {% if request.get_full_path == '/' %}
+      <div class="home-content d-flex flex-column align-content-center mt-5" id="home">
+        <h3 class="sub-heading">WELCOME TO</h3>
+        <h1 class="cover-heading">Bugger</h1>
+        <p class="lead opener">
+          The definitive <strong class="pms">Project Management System</strong> where you can take charge and run your projects instead of letting them run you.
+        </p>
+        <a href="#about"><button class="btn btn-primary">Learn More</button></a>
+      </div>
+
+      <div class="home-content flex-row justify-content-center" id="about">
+        <div class="col-12">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        </div>
+      </div>
     {% endif %}
   {% endif %}
 {% endblock content %}
