@@ -1,9 +1,11 @@
-function myFunction() {
-    const links = document.getElementById('side-links');
-    const hamburger = document.getElementById('icon');
+function scrollSmoothTo() {
+    const section = document.getElementById('about');
+    const button = document.getElementById('scroll');
 
-    hamburger.addEventListener('click', () => {
-        if(links.style.display == 'none'){links.style.display = 'block'}
-        else{links.style.display = 'none'}
-    })
+    button.addEventListener('click', ()=>{
+        section.scrollIntoView({
+          block: 'start',
+          behavior: 'smooth'
+        });
+    });
   }
